@@ -1,20 +1,15 @@
-File name:
-.github/workflows/build-scan-push-update-gitops.yml
-
----
-
-```yaml
 name: Build Scan Push Update GitOps
 
 on:
   push:
-    branches: [ main ]
+    branches:
+      - main
 
 env:
   IMAGE_NAME: aks-devsecops-app
   GITOPS_REPO: hansessay/gitops-configs
   GITOPS_BRANCH: main
-  MANIFEST_FILE: apps/backend/deployment.yaml
+  MANIFEST_FILE: backend-complete.yaml
 
 jobs:
   build-scan-push-update:
@@ -31,8 +26,7 @@ jobs:
           password: ${{ secrets.DOCKERHUB_TOKEN }}
 
       - name: Build Docker image
-        run: |
-          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
+        run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
 
       - name: Trivy scan
         uses: aquasecurity/trivy-action@master
@@ -42,8 +36,7 @@ jobs:
           exit-code: 1
 
       - name: Push Docker image
-        run: |
-          docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
+        run: docker push ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}
 
       - name: Checkout GitOps repo
         uses: actions/checkout@v4
@@ -63,13 +56,4 @@ jobs:
 
           git add ${{ env.MANIFEST_FILE }}
           git commit -m "ci: update image tag to ${{ github.sha }}" || echo "No changes to commit"
-          git push
-```
-
----
-
-Required GitHub Secrets:
-
-* DOCKERHUB_USERNAME
-* DOCKERHUB_TOKEN
-* GITOPS_TOKEN
+          git push1
