@@ -56,4 +56,4 @@ jobs:
 
           git add ${{ env.MANIFEST_FILE }}
           git commit -m "ci: update image tag to ${{ github.sha }}" || echo "No changes to commit"
-          git push1
+          git push
