@@ -18,7 +18,7 @@ commonAnnotations:
 
 # Centralized image management
 images:
-  - name:  piyushasachdeva/frontend
+  - name:  cheikhfall/frontend:v1.0.0
     newTag: v1
   - name: piyushasachdeva/backend
     newTag: latest

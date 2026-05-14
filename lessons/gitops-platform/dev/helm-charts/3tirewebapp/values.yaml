@@ -1,5 +1,5 @@
-﻿frontend:
+frontend:
   name: frontend
   image: nginx
-  replicas: 2   # change from 1 → 2
+  replicas: 2   # change from 1 ? 2
   port: 80
