@@ -1,10 +1,17 @@
 # Terraform
 .terraform/
 *.tfstate
-*.tfstate.backup
+*.tfstate.*
+*.tfvars
+*.tfvars.json
+*.tfplan
 
 # Kubernetes secrets
 *.secret.yaml
+
+# Kube config
+.kube/
+kubeconfig
 
 # Logs
 *.log
@@ -15,8 +22,13 @@ Thumbs.db
 
 # Node
 node_modules/
+
 # Secrets and local files
 credentials-velero*
 bsl-patch.json
 zap-report*.html
 zap-report*.json
+
+# Env files
+.env
+*.env
