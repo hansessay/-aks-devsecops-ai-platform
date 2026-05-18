@@ -1,0 +1,7 @@
+
+# Security reports and local credentials
+zap-report*.html
+zap-report*.json
+zap.yaml
+bsl-patch.json
+credentials-velero*

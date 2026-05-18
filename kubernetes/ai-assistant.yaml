@@ -1,0 +1,34 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ai-assistant
+  namespace: 3tirewebapp-dev
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: ai-assistant
+  template:
+    metadata:
+      labels:
+        app: ai-assistant
+    spec:
+      serviceAccountName: ai-assistant-sa
+      containers:
+      - name: ai-assistant
+        image: cheikhacrdev.azurecr.io/ai-assistant:v2
+        ports:
+        - containerPort: 5000
+
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ai-assistant
+  namespace: 3tirewebapp-dev
+spec:
+  selector:
+    app: ai-assistant
+  ports:
+  - port: 5000
+    targetPort: 5000

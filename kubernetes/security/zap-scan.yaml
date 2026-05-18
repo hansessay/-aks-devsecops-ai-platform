@@ -1,0 +1,20 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: zap-scan
+  namespace: 3tirewebapp-dev
+spec:
+  backoffLimit: 0
+  template:
+    spec:
+      restartPolicy: Never
+      containers:
+      - name: zap
+        image: ghcr.io/zaproxy/zaproxy:stable
+        command: ["zap-baseline.py"]
+        args:
+        - "-t"
+        - "http://frontend"
+        - "-I"
+        - "-m"
+        - "3"

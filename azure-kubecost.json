@@ -1,0 +1,9 @@
+{
+  "azureSubscriptionID": "76b87fa1-b1d1-45a8-85ba-bf485589c601",
+  "azureTenantID": "c4fd0d6e-4137-4fea-bc2f-eec27fd95b8a",
+  "azureClientID": "4d8be6f1-0824-411b-9e9b-9a5adbaf1fe5",
+  "azureClientPassword": "PASTE_CLIENT_SECRET_HERE",
+  "azureStorageAccount": "cheikhibrafall",
+  "azureStorageContainer": "kubecost-billing",
+  "azureContainerPath": "amortized-cost"
+}

@@ -1,0 +1,63 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+
+metadata:
+  name: dev-team-role
+  namespace: default
+  labels:
+    security-model: enterprise-rbac
+    managed-by: gitops
+    identity-provider: entra-id
+
+rules:
+  ############################################
+  # Workload Management
+  ############################################
+  - apiGroups: ["apps"]
+    resources:
+      - deployments
+      - replicasets
+      - statefulsets
+    verbs:
+      - get
+      - list
+      - watch
+      - create
+      - update
+      - patch
+      - delete
+
+  ############################################
+  # Pod Inspection / Debugging
+  ############################################
+  - apiGroups: [""]
+    resources:
+      - pods
+      - pods/log
+    verbs:
+      - get
+      - list
+      - watch
+
+  ############################################
+  # Service & Config Access
+  ############################################
+  - apiGroups: [""]
+    resources:
+      - services
+      - configmaps
+    verbs:
+      - get
+      - list
+      - watch
+
+  ############################################
+  # Optional: Read Namespace Events
+  ############################################
+  - apiGroups: [""]
+    resources:
+      - events
+    verbs:
+      - get
+      - list
+      - watch
