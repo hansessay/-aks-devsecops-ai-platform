@@ -8,6 +8,11 @@ terraform {
       version = "~> 4.0"
     }
 
+    azuread = {
+      source  = "hashicorp/azuread"
+      version = "~> 3.0"
+    }
+
     kubernetes = {
       source  = "hashicorp/kubernetes"
       version = "~> 2.0"
@@ -29,9 +34,10 @@ provider "azurerm" {
   subscription_id = "b9314784-3340-472d-9008-efe320576fa1"
 }
 
+provider "azuread" {}
+
 ############################################
 # KUBERNETES PROVIDER
-# Uses local kubeconfig from az aks get-credentials
 ############################################
 provider "kubernetes" {
   config_path = "~/.kube/config"
@@ -39,7 +45,6 @@ provider "kubernetes" {
 
 ############################################
 # HELM PROVIDER
-# Uses same local kubeconfig
 ############################################
 provider "helm" {
   kubernetes {
