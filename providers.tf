@@ -30,23 +30,19 @@ provider "azurerm" {
 }
 
 ############################################
-# KUBERNETES PROVIDER (FROM AKS OUTPUT)
+# KUBERNETES PROVIDER
+# Uses local kubeconfig from az aks get-credentials
 ############################################
 provider "kubernetes" {
-  host                   = module.aks.kube_config.host
-  client_certificate     = base64decode(module.aks.kube_config.client_certificate)
-  client_key             = base64decode(module.aks.kube_config.client_key)
-  cluster_ca_certificate = base64decode(module.aks.kube_config.cluster_ca_certificate)
+  config_path = "~/.kube/config"
 }
 
 ############################################
-# HELM PROVIDER (USES SAME CONFIG)
+# HELM PROVIDER
+# Uses same local kubeconfig
 ############################################
 provider "helm" {
   kubernetes {
-    host                   = module.aks.kube_config.host
-    client_certificate     = base64decode(module.aks.kube_config.client_certificate)
-    client_key             = base64decode(module.aks.kube_config.client_key)
-    cluster_ca_certificate = base64decode(module.aks.kube_config.cluster_ca_certificate)
+    config_path = "~/.kube/config"
   }
 }

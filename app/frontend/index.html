@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Employee Management</title>
+</head>
+<body>
+  <h1>Employees</h1>
+
+  <input id="name" placeholder="Name" />
+  <input id="role" placeholder="Role" />
+  <input id="department" placeholder="Department" />
+  <input id="email" placeholder="Email" />
+
+  <button onclick="createEmployee()">Add Employee</button>
+
+  <ul id="employees"></ul>
+
+  <script>
+    const API = "http://backend/employees";
+
+    async function loadEmployees() {
+      const res = await fetch(API);
+      const data = await res.json();
+
+      const list = document.getElementById("employees");
+      list.innerHTML = "";
+
+      data.forEach(emp => {
+        const li = document.createElement("li");
+        li.innerHTML = `
+          ${emp.name} - ${emp.role} - ${emp.department}
+          <button onclick="deleteEmployee(${emp.id})">X</button>
+        `;
+        list.appendChild(li);
+      });
+    }
+
+    async function createEmployee() {
+      const name = document.getElementById("name").value;
+      const role = document.getElementById("role").value;
+      const department = document.getElementById("department").value;
+      const email = document.getElementById("email").value;
+
+      await fetch(API, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ name, role, department, email })
+      });
+
+      loadEmployees();
+    }
+
+    async function deleteEmployee(id) {
+      await fetch(API + "/" + id, { method: "DELETE" });
+      loadEmployees();
+    }
+
+    loadEmployees();
+  </script>
+</body>
+</html>

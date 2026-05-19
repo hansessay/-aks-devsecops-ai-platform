@@ -1,0 +1,15 @@
+CREATE TABLE IF NOT EXISTS employees (
+    id SERIAL PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    role VARCHAR(100) NOT NULL,
+    department VARCHAR(100) NOT NULL,
+    email VARCHAR(150) UNIQUE NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+);
+
+INSERT INTO employees (name, role, department, email)
+VALUES
+('Amina Diallo', 'DevOps Engineer', 'Platform Engineering', 'amina.diallo@example.com'),
+('John Andersson', 'Backend Developer', 'Application Team', 'john.andersson@example.com'),
+('Sara Svensson', 'Security Engineer', 'DevSecOps', 'sara.svensson@example.com')
+ON CONFLICT (email) DO NOTHING;
