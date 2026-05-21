@@ -1,0 +1,8 @@
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: employee-crud-dev-strict-mtls
+  namespace: employee-crud-dev
+spec:
+  mtls:
+    mode: STRICT

@@ -4,24 +4,35 @@ metadata:
   name: employee-crud-ingress
   namespace: employee-crud-test
   annotations:
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+    nginx.ingress.kubernetes.io/use-regex: "true"
     nginx.ingress.kubernetes.io/rewrite-target: /$2
+
 spec:
   ingressClassName: nginx
+
+  tls:
+  - hosts:
+    - chefall.duckdns.org
+    secretName: employee-crud-test-tls
+
   rules:
-    - host: chefall.duckdns.org
-      http:
-        paths:
-          - path: /api(/|$)(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: backend
-                port:
-                  number: 80
-          - path: /(.*)
-            pathType: ImplementationSpecific
-            backend:
-              service:
-                name: frontend
-                port:
-                  number: 80
+  - host: chefall.duckdns.org
+    http:
+      paths:
+
+      - path: /api-test(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: backend
+            port:
+              number: 80
+
+      - path: /test(/|$)(.*)
+        pathType: ImplementationSpecific
+        backend:
+          service:
+            name: frontend
+            port:
+              number: 80

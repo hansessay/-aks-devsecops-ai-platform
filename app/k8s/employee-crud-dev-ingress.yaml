@@ -1,0 +1,40 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: employee-crud-dev-ingress
+  namespace: employee-crud-dev
+  annotations:
+    nginx.ingress.kubernetes.io/use-regex: "true"
+    nginx.ingress.kubernetes.io/rewrite-target: /$2
+
+    # Tell cert-manager to generate TLS certificates
+    cert-manager.io/cluster-issuer: "letsencrypt-prod"
+
+spec:
+  ingressClassName: nginx
+
+  # HTTPS certificate section
+  tls:
+    - hosts:
+        - chefall.duckdns.org
+      secretName: employee-crud-dev-tls
+
+  rules:
+    - host: chefall.duckdns.org
+      http:
+        paths:
+          - path: /api-dev(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: backend
+                port:
+                  number: 80
+
+          - path: /dev(/|$)(.*)
+            pathType: ImplementationSpecific
+            backend:
+              service:
+                name: frontend
+                port:
+                  number: 80

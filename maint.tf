@@ -18,8 +18,29 @@ module "network" {
   location            = var.location
   resource_group_name = module.resource_group.name
 
-  address_space   = var.address_space
-  subnet_prefixes = var.subnet_prefix
+  address_space           = var.address_space
+  subnet_prefixes         = var.subnet_prefix
+  ddos_protection_plan_id = module.edge.ddos_protection_plan_id
+}
+
+############################################
+# EDGE: Front Door + CDN + WAF + DDoS + Workers
+############################################
+module "edge" {
+  source = "../../modules/edge"
+
+  name                = "edge-${var.project_name}-dev"
+  location            = var.location
+  resource_group_name = module.resource_group.name
+  environment         = "dev"
+
+  origin_host_name        = var.edge_origin_host_name
+  origin_host_header      = var.edge_origin_host_header
+  custom_domain_host_name = var.edge_custom_domain_host_name
+  origin_http_port        = 80
+  origin_https_port       = 443
+
+  sku_name = "Premium_AzureFrontDoor"
 }
 
 ############################################

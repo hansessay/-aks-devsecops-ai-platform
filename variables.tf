@@ -44,3 +44,27 @@ variable "dns_service_ip" {
   default     = "10.0.0.10"
 }
 
+variable "edge_origin_host_name" {
+  description = "Origin hostname for Azure Front Door and CDN."
+  type        = string
+  default     = "chefall.duckdns.org"
+}
+
+variable "edge_origin_host_header" {
+  description = "Host header sent to the origin from Front Door."
+  type        = string
+  default     = null
+}
+
+variable "edge_custom_domain_host_name" {
+  description = "The custom domain to bind to Front Door."
+  type        = string
+  default     = "cheikhibra.duckdns.org"
+}
+
+variable "oncall_email" {
+  description = "Email address to notify for AKS alerting."
+  type        = string
+  default     = "oncall@example.com"
+}
+
