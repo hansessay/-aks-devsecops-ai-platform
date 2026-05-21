@@ -1,0 +1,8 @@
+apiVersion: security.istio.io/v1
+kind: PeerAuthentication
+metadata:
+  name: employee-crud-permissive-mtls
+  namespace: employee-crud-test
+spec:
+  mtls:
+    mode: PERMISSIVE
