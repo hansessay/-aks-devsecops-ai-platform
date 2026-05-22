@@ -1,0 +1,35 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: frontend-v2
+  namespace: employee-crud-test
+
+spec:
+  replicas: 1
+
+  selector:
+    matchLabels:
+      app: frontend
+      version: v2
+
+  template:
+    metadata:
+      labels:
+        app: frontend
+        version: v2
+
+    spec:
+      containers:
+      - name: frontend
+        image: chefallacr.azurecr.io/aks-crud-frontend:latest
+
+        ports:
+        - containerPort: 80
+
+        resources:
+          requests:
+            cpu: "100m"
+            memory: "128Mi"
+          limits:
+            cpu: "500m"
+            memory: "256Mi"

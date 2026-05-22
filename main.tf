@@ -1,28 +1,37 @@
-resource "helm_release" "ingress_nginx" {
-  name       = "ingress-nginx"
-  namespace  = "ingress-nginx"
-  repository = "https://kubernetes.github.io/ingress-nginx"
-  chart      = "ingress-nginx"
+module "resource_group" {
+  source = "../../modules/resource_group"
 
-  create_namespace = true
+  name     = "rg-${var.project_name}-dev"
+  location = var.location
+}
 
-  set {
-    name  = "controller.service.type"
-    value = "LoadBalancer"
-  }
+module "network" {
+  source = "../../modules/network"
 
-  set {
-    name  = "controller.service.loadBalancerIP"
-    value = "40.114.208.193"
-  }
+  name                = "vnet-${var.project_name}-dev"
+  location            = var.location
+  resource_group_name = module.resource_group.name
 
-  set {
-    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-resource-group"
-    value = "rg-aks-enterprise-platform-dev"
-  }
+  address_space   = var.address_space
+  subnet_prefixes = var.subnet_prefix
 
-  set {
-    name  = "controller.service.annotations.service\\.beta\\.kubernetes\\.io/azure-load-balancer-health-probe-request-path"
-    value = "/healthz"
-  }
+  # Edge module disabled
+  # Azure Front Door unavailable on Student/Free subscription
+  # ddos_protection_plan_id = module.edge.ddos_protection_plan_id
+}
+
+module "aks" {
+  source = "../../modules/aks"
+
+  name                = "aks-${var.project_name}-dev"
+  location            = var.location
+  resource_group_name = module.resource_group.name
+
+  dns_prefix     = "aks-${var.project_name}-dev"
+  node_count     = var.node_count
+  vm_size        = var.vm_size
+  subnet_id      = module.network.aks_subnet_id
+  pod_cidr       = var.pod_cidr
+  service_cidr   = var.service_cidr
+  dns_service_ip = var.dns_service_ip
 }

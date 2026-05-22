@@ -1,0 +1,18 @@
+apiVersion: networking.istio.io/v1
+kind: VirtualService
+metadata:
+  name: frontend-canary
+  namespace: employee-crud-test
+spec:
+  hosts:
+  - frontend
+  http:
+  - route:
+    - destination:
+        host: frontend
+        subset: v1
+      weight: 90
+    - destination:
+        host: frontend
+        subset: v2
+      weight: 10
