@@ -35,3 +35,37 @@ module "aks" {
   service_cidr   = var.service_cidr
   dns_service_ip = var.dns_service_ip
 }
+
+################################################################################
+# BOOTSTRAP MODULE - Orchestrates ArgoCD and GitOps deployment
+################################################################################
+module "bootstrap" {
+  source = "../../modules/bootstrap"
+
+  # Enable bootstrap automation
+  enable_argocd     = var.enable_argocd
+  enable_root_app   = var.enable_root_app
+  enable_external_secrets = var.enable_external_secrets
+
+  # ArgoCD Configuration
+  argocd_namespace        = var.argocd_namespace
+  argocd_service_type     = var.argocd_service_type
+  argocd_chart_version    = var.argocd_chart_version
+  argocd_insecure_mode    = var.argocd_insecure_mode
+
+  # GitOps Repository
+  gitops_repo_url         = var.gitops_repo_url
+  gitops_repo_revision    = var.gitops_repo_revision
+  platform_app_path       = var.platform_app_path
+  apps_app_path           = var.apps_app_path
+
+  # Key Vault Integration
+  keyvault_uri            = azurerm_key_vault.platform.vault_uri
+  azure_tenant_id         = data.azurerm_client_config.current.tenant_id
+
+  # Depends on AKS cluster
+  depends_on = [
+    module.aks,
+    kubernetes_namespace.argocd
+  ]
+}
