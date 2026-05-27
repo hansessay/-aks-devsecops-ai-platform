@@ -9,7 +9,7 @@ env:
   IMAGE_NAME: aks-devsecops-app
   GITOPS_REPO: hansessay/gitops-configs
   GITOPS_BRANCH: main
-  MANIFEST_FILE: backend-complete.yaml
+  MANIFEST_PATH: apps/employee-crud-test/backend.yaml
 
 jobs:
   build-scan-push-update:
@@ -69,23 +69,19 @@ jobs:
         run: |
           cd gitops
 
-          MANIFEST_PATH=$(find . -name "${{ env.MANIFEST_FILE }}" | head -n 1)
-
-          if [ -z "$MANIFEST_PATH" ]; then
-            echo "ERROR: ${{ env.MANIFEST_FILE }} not found in GitOps repo"
-            echo "Available YAML files:"
-            find . -name "*.yaml"
+          if [ ! -f "${{ env.MANIFEST_PATH }}" ]; then
+            echo "ERROR: File not found -> ${{ env.MANIFEST_PATH }}"
             exit 1
           fi
 
-          echo "Updating image in $MANIFEST_PATH"
+          echo "Updating image in ${{ env.MANIFEST_PATH }}"
 
-          sed -i "s|image: .*|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|g" "$MANIFEST_PATH"
+          sed -i "s|image: .*|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|g" "${{ env.MANIFEST_PATH }}"
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          git add "$MANIFEST_PATH"
+          git add "${{ env.MANIFEST_PATH }}"
 
           git commit -m "ci: update image tag to ${{ github.sha }}" || echo "No changes to commit"
 
