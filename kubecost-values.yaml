@@ -1,0 +1,11 @@
+global:
+  clusterId: aks-gitops-cluster-dev
+
+kubecostProductConfigs:
+  clusterName: aks-gitops-cluster-dev
+
+prometheus:
+  enabled: true
+
+finOpsAgent:
+  enabled: false

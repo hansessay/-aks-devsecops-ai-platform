@@ -1,0 +1,6 @@
+apiVersion: v2
+name: 3tirewebapp
+description: A simple 3-tier web application
+type: application
+version: 0.1.0
+appVersion: "1.0"

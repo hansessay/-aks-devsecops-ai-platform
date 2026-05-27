@@ -1,0 +1,26 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: frontend-nginx-security-config
+  namespace: 3tirewebapp-dev
+data:
+  default.conf: |
+    server {
+      listen 80;
+      server_name _;
+
+      server_tokens off;
+
+      add_header X-Frame-Options "DENY" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header Content-Security-Policy "default-src 'self'; frame-ancestors 'none';" always;
+      add_header Permissions-Policy "geolocation=(), microphone=(), camera=()" always;
+      add_header Cache-Control "no-store, no-cache, must-revalidate, proxy-revalidate" always;
+      add_header Referrer-Policy "strict-origin-when-cross-origin" always;
+
+      location / {
+        root /usr/share/nginx/html;
+        index index.html index.htm;
+        try_files $uri $uri/ /index.html;
+      }
+    }

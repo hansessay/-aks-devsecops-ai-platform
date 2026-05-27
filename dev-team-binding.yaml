@@ -1,0 +1,19 @@
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+
+metadata:
+  name: dev-team-binding
+  namespace: default
+
+subjects:
+  - kind: Group
+
+    # Entra ID Group Object ID
+    name: "38815ae9-f42f-4a21-85d7-d45dc1004c4b"
+
+    apiGroup: rbac.authorization.k8s.io
+
+roleRef:
+  kind: Role
+  name: dev-team-role
+  apiGroup: rbac.authorization.k8s.io
