@@ -21,13 +21,11 @@ jobs:
         with:
           fetch-depth: 0
 
-      # 🔐 Secret scanning
       - name: Gitleaks secret scan
         uses: gitleaks/gitleaks-action@v2
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-      # 🔍 Filesystem scan
       - name: Trivy filesystem scan
         uses: aquasecurity/trivy-action@master
         with:
@@ -45,7 +43,6 @@ jobs:
       - name: Build Docker image
         run: docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }} .
 
-      # 🔍 Image scan
       - name: Trivy image scan
         uses: aquasecurity/trivy-action@master
         with:
@@ -67,11 +64,22 @@ jobs:
       - name: Update image tag in GitOps repo
         run: |
           cd gitops
-          sed -i "s|image: .*|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|g" ${{ env.MANIFEST_FILE }}
+
+          MANIFEST_PATH=$(find . -name "${{ env.MANIFEST_FILE }}" | head -n 1)
+
+          if [ -z "$MANIFEST_PATH" ]; then
+            echo "ERROR: ${{ env.MANIFEST_FILE }} not found in GitOps repo"
+            find . -name "*.yaml"
+            exit 1
+          fi
+
+          echo "Updating image in $MANIFEST_PATH"
+
+          sed -i "s|image: .*|image: ${{ secrets.DOCKERHUB_USERNAME }}/${{ env.IMAGE_NAME }}:${{ github.sha }}|g" "$MANIFEST_PATH"
 
           git config user.name "github-actions"
           git config user.email "github-actions@github.com"
 
-          git add ${{ env.MANIFEST_FILE }}
+          git add "$MANIFEST_PATH"
           git commit -m "ci: update image tag to ${{ github.sha }}" || echo "No changes to commit"
           git push
