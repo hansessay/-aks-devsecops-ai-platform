@@ -14,7 +14,6 @@ resource "azurerm_cdn_frontdoor_endpoint" "endpoint" {
   name                     = "${var.name}-endpoint"
   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.fd_profile.id
   enabled                  = true
-
   tags = {
     environment = var.environment
     component   = "edge"
@@ -55,7 +54,7 @@ resource "azurerm_cdn_frontdoor_origin" "origin" {
 }
 
 resource "azurerm_cdn_frontdoor_firewall_policy" "waf" {
-  name                              = "${var.name}waf"
+  name                              = "${var.name}-waf"
   resource_group_name               = var.resource_group_name
   sku_name                          = azurerm_cdn_frontdoor_profile.fd_profile.sku_name
   enabled                           = true
@@ -91,7 +90,7 @@ resource "azurerm_cdn_frontdoor_security_policy" "security" {
 }
 
 resource "azurerm_cdn_frontdoor_rule_set" "worker_rules" {
-  name                     = "${var.name}workers"
+  name                     = "${var.name}-workers"
   cdn_frontdoor_profile_id = azurerm_cdn_frontdoor_profile.fd_profile.id
 }
 
@@ -101,7 +100,7 @@ resource "azurerm_cdn_frontdoor_rule" "worker" {
     azurerm_cdn_frontdoor_origin.origin,
   ]
 
-  name                      = "${var.name}workerrule"
+  name                      = "${var.name}-worker-rule"
   cdn_frontdoor_rule_set_id = azurerm_cdn_frontdoor_rule_set.worker_rules.id
   order                     = 1
   behavior_on_match         = "Continue"
@@ -159,7 +158,6 @@ resource "azurerm_cdn_frontdoor_route" "route" {
   cache {
     query_string_caching_behavior = "IgnoreQueryString"
     compression_enabled           = true
-
     content_types_to_compress = [
       "text/html",
       "application/javascript",
