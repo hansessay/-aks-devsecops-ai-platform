@@ -1,9 +1,7 @@
 name: Build Scan Push Update GitOps
 
 on:
-  push:
-    branches:
-      - main
+  workflow_dispatch:
 
 env:
   IMAGE_NAME: aks-devsecops-app
